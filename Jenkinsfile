@@ -20,7 +20,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'dockerhub_id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
           container('docker') {  
             sh "docker build -t $registry:dev ."  // when we run docker in this step, we're running it via a shell on the docker build-pod container, 
-            sh "docker login --username=$DOCKER_USER --password=$DOCKER_PASS && docker push -t $registry:dev"        // which is just connecting to the host docker deaemon
+            sh "docker login --username=$DOCKER_USER --password-stdin=$DOCKER_PASS && docker push $registry:dev"        // which is just connecting to the host docker deaemon
           }
         }
       }
