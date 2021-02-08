@@ -1,4 +1,7 @@
 pipeline {
+  environment { 
+        registry = "nerdyflogrammer/demo" 
+      }
   agent {
     kubernetes {
       idleMinutes 5  // how long the pod will live after no jobs have run on it
@@ -14,9 +17,11 @@ pipeline {
     }
     stage('Build Docker Image') {
       steps {
-        container('docker') {  
-          sh "docker build -t nerdyflogrammer/demo:dev ."  // when we run docker in this step, we're running it via a shell on the docker build-pod container, 
-          sh "docker build -t nerdyflogrammer/demo:dev"        // which is just connecting to the host docker deaemon
+        withCredentials([usernamePassword(credentialsId: 'dockerhub_id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          container('docker') {  
+            sh "docker build -t $registry:dev ."  // when we run docker in this step, we're running it via a shell on the docker build-pod container, 
+            sh "docker login --username=$DOCKER_USER --password=$DOCKER_PASS && docker push -t $registry:dev"        // which is just connecting to the host docker deaemon
+          }
         }
       }
     }
