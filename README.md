@@ -1,45 +1,29 @@
-# Spring Boot Swagger
+# Spring boot application example
 
-RESTful API Documentation Using Swagger and Spring Boot
+The project is based on a small web service which uses the following technologies:
 
+* Java 1.8
+* Spring MVC with Spring Boot
+* Database H2 (In-Memory)
+* Maven
 
-What is Swagger
+ * The architecture of the web service is built with the following components:
+   * DataTransferObjects: Objects which are used for outside communication via the API
+   * Controller: Implements the processing logic of the web service, parsing of parameters and validation of in- and outputs.
+   * Service: Implements the business logic and handles the access to the DataAccessObjects.
+   * DataAccessObjects: Interface for the database. Inserts, updates, deletes and reads objects from the database.
+   * DomainObjects: Functional Objects which might be persisted in the database.
 
-Swagger is a specification for documenting REST APIs. It describes the api format including URL, method, and representation to describe REST web services. Swagger is meant to enable the service producer to update the service documentation in real time so that client and documentation systems are moving at the same pace as the server. The methods, parameters, and models description are tightly integrated into the server code, thereby maintaining the synchronization in APIs and its documentation. The specification asks you to include information like:
+# How to start the app
+You should be able to start the example application by executing com.myapp.MyappServer, which starts a webserver on port 8080 (http://localhost:8080) and serves SwaggerUI where can inspect and try existing endpoints.
 
-    What are all the operations that your API supports?
-    What are your API’s parameters and what does it return?
-    Does your API need some authorization?
-    And even fun things like terms, contact information and license to use the API.
-
-Swagger is created by Wordnik, which defines the specification and framework for their internal development use for “develop.wordnik.com” and underlying system. They started developing the framework in early 2010—being released, is currently also used by Wordnik’s APIs, which powers both internal and external API clients. Here in this post we will create a Spring Boot project for a RESTful Api which is documented with Swagger. To integrate Swagger with Spring Boot we need to include the following maven dependencies in our pom.xml file.
-
+# Useful commands
+Useful curl commands to test. It can be tested with swagger also: http://localhost:8080/swagger-ui.html
 
 ```
-<!-- swagger dependencies -->
- <dependency>
-	<groupId>io.springfox</groupId>
-	<artifactId>springfox-swagger2</artifactId>
-</dependency>
-
-<dependency>
-	<groupId>io.springfox</groupId>
-	<artifactId>springfox-swagger-ui</artifactId>
-</dependency>
+curl -u user:password "http://localhost:8080/v1/cars"
+curl -u user:password "http://localhost:8080/v1/drivers?onlineStatus=ONLINE"
+curl -u user:password "http://localhost:8080/v1/drivers?onlineStatus=ONLINE&deleted=false"
+curl -u user:password "http://localhost:8080/v1/drivers?onlineStatus=ONLINE&deleted=false&username=driver01"
+curl -u user:password -X PUT "http://localhost:8080/v1/drivers/4/car/4545PWR"
 ```
-
-All the Swagger annotations for documenting the controller are self explanatory. Following are some of the annotation used here
-
-@Api →  Narrates the description about what in general is the responsibility of the controller.
-
-@ApiOperation →  Narrates the responsibility of the specific method.
-
-@ApiParam → Narrates the parameter the method is expecting and also tells whether it is mandatory or not.
-
-Run this project by this command : `mvn clean spring-boot:run`
-
-Open your browser :
-
-`http://localhost:8080/swagger-ui.html`
-
-![List API Page](img/list.png "List API Page")
